@@ -1,4 +1,4 @@
-= nmr_uploader
+= ACData-NMR-Uploader
 
 Upload NMR datasets to ACData
 
