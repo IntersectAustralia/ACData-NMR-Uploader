@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'nmr_uploader'
+
+begin
+  options = NMRUploader.parse_options
+  NMRUploader.create_datasets(options)
+rescue Exception => e
+  $stderr.puts e.message
+end
+

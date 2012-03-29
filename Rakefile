@@ -15,13 +15,14 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "nmr_uploader"
-  gem.homepage = "http://github.com/seandmccarthy/nmr_uploader"
+  gem.homepage = "http://github.com/IntersectAustralia/nmr_uploader"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "sean@clanmccarthy.net"
+  gem.summary = %Q{Upload NMR datasets to ACData}
+  gem.description = %Q{Upload NMR datasets to ACData}
+  gem.email = "enquiries@intersect.org.au"
   gem.authors = ["Sean McCarthy"]
   # dependencies defined in Gemfile
+  gem.add_dependency 'highline'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -30,14 +31,6 @@ Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
   test.verbose = true
-end
-
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-  test.rcov_opts << '--exclude "gems/*"'
 end
 
 task :default => :test
