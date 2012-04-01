@@ -49,7 +49,7 @@ class DatasetAPI
   def create_sample(session, opts)
     url = URI.parse("#{@base_url + SAMPLES_URL}")
     http = Net::HTTP::new(url.host, url.port)
-    http.use_ssl = true if signin_url.scheme == 'https'
+    http.use_ssl = true if url.scheme == 'https'
 
     req = Net::HTTP::Post.new(
         url.path,
@@ -79,7 +79,7 @@ class DatasetAPI
 
     url = URI.parse("#{@base_url + DATASET_URL}")
     http = Net::HTTP::new(url.host, url.port)
-    http.use_ssl = true if signin_url.scheme == 'https'
+    http.use_ssl = true if url.scheme == 'https'
 
     req = Net::HTTP::Post.new(
         url.path,
