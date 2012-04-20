@@ -1,7 +1,14 @@
+GIT
+  remote: git://github.com/IntersectAustralia/acdata-dataset-api.git
+  revision: d759bd2ab80d425c3aee28202f80fe2a3e87e1bb
+  specs:
+    acdata-dataset-api (1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
     git (1.2.5)
+    highline (1.6.11)
     jeweler (1.8.3)
       bundler (~> 1.0)
       git (>= 1.2.5)
@@ -21,7 +28,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.0.0)
+  acdata-dataset-api!
+  bundler (~> 1.1.0)
+  highline
   jeweler (~> 1.8.3)
   rdoc (~> 3.12)
   shoulda

@@ -16,24 +16,16 @@ Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "nmr_uploader"
   gem.homepage = "http://github.com/IntersectAustralia/nmr_uploader"
-  gem.license = "MIT"
+  gem.license = "GPL-3"
   gem.summary = %Q{Upload NMR datasets to ACData}
   gem.description = %Q{Upload NMR datasets to ACData}
   gem.email = "enquiries@intersect.org.au"
   gem.authors = ["Sean McCarthy"]
   # dependencies defined in Gemfile
-  gem.add_dependency 'highline'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-task :default => :test
+task :default => :build
 
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|

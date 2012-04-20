@@ -1,4 +1,4 @@
-require File.expand_path('../dataset_api', __FILE__)
+require 'acdata-dataset-api'
 require 'optparse'
 require 'ostruct'
 require 'highline/import'
@@ -9,7 +9,7 @@ class NMRUploader
   DEFAULT_URL = 'http://localhost:3000'
 
   def self.create_datasets(opts)
-    api = DatasetAPI.new(opts.url)
+    api = ACDataDatasetAPI.new(opts.url)
     opts.sample_directories.keys.each do |sample_dir|
       sample_name = File.basename(sample_dir)
       begin
@@ -77,8 +77,12 @@ class NMRUploader
     id_name
   end
 
-  def self.parse_options
-    options = OpenStruct.new
+  def self.parse_options(options=nil)
+    options ||= OpenStruct.new
+    options.src_dir = nil
+    options.instrument_id = nil
+    options.project_id = nil
+
     OptionParser.new do |opts|
       opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
 
@@ -131,16 +135,18 @@ class NMRUploader
     end
 
     options.url ||= DEFAULT_URL
-    api = DatasetAPI.new(options.url)
+    api = ACDataDatasetAPI.new(options.url)
     if options.user_name.nil?
       options.user_name = prompt_for('zID')
     end
 
-    begin
-      options.password = prompt_for('zPass', {:hidden => true})
-      options.session_id = api.login(options.user_name, options.password)
-    ensure
-      options.password = nil
+    if options.session_id.nil?
+      begin
+        options.password = prompt_for('zPass', {:hidden => true})
+        options.session_id = api.login(options.user_name, options.password)
+      ensure
+        options.password = nil
+      end
     end
     
     instrument_map = api.instruments(options.session_id)
@@ -166,8 +172,6 @@ class NMRUploader
 
     options
   end
-
-  private
 
   def self.prompt_for(key, opts={})
     ask("#{key}: ") {|q| q.echo = opts[:hidden] != true}

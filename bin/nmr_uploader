@@ -3,8 +3,12 @@
 require 'nmr_uploader'
 
 begin
-  options = NMRUploader.parse_options
-  NMRUploader.create_datasets(options)
+  options = nil
+  begin
+    options = NMRUploader.parse_options(options)
+    NMRUploader.create_datasets(options)
+    continue = NMRUploader.prompt_for('Upload another set? (y/N)')
+  end while continue =~ /^y(es)?$/i
 rescue Exception => e
   $stderr.puts e.message
 end
