@@ -7,3 +7,14 @@ Upload NMR datasets to ACData
 Copyright (c) 2012 Intersect Australia. See LICENSE.txt for
 further details.
 
+== Building
+
+rake build
+
+== Installing
+
+Build and then install the gem created under pkg/
+
+gem install nmr_uploader-x.y.z.gem
+
+(Highly recommend using rvm - https://rvm.io/)
