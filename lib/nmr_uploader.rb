@@ -13,14 +13,21 @@ class NMRUploader
     opts.sample_directories.keys.each do |sample_dir|
       sample_name = File.basename(sample_dir)
       begin
-        sample = api.create_sample(opts.session_id,
-          {:project_id => opts.project_id, :name => sample_name})
+        params = {
+          :project_id => opts.project_id,
+          :name => sample_name
+        }
+        if !(opts.experiment_id.nil? or opts.experiment_id.empty?)
+          params[:experiment_id] = opts.experiment_id
+        end
+        sample = api.create_sample(opts.session_id, params)
 
         opts.sample_directories[sample_dir].each do |dataset_dir|
           title = self.extract_title(dataset_dir)
           puts "Creating dataset name: #{title} (under sample: #{sample_name})"
           api.create_dataset(opts.session_id, title, opts.instrument_id, sample['id'], [dataset_dir])
         end
+        puts
       rescue Exception => e
         $stderr.puts "Problem importing: #{e.message}"
         $stderr.puts "Will skip this one and continue"
@@ -82,6 +89,7 @@ class NMRUploader
     options.src_dir = nil
     options.instrument_id = nil
     options.project_id = nil
+    options.experiment_id = nil
 
     OptionParser.new do |opts|
       opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
@@ -136,11 +144,12 @@ class NMRUploader
 
     options.url ||= DEFAULT_URL
     api = ACDataDatasetAPI.new(options.url)
-    if options.user_name.nil?
-      options.user_name = prompt_for('zID')
-    end
-
     if options.session_id.nil?
+      if options.user_name.nil?
+        puts
+        options.user_name = prompt_for('zID')
+      end
+
       begin
         options.password = prompt_for('zPass', {:hidden => true})
         options.session_id = api.login(options.user_name, options.password)
@@ -161,13 +170,31 @@ class NMRUploader
 
     project_map = api.projects(options.session_id)
     project_list = {}
-    project_map['projects'].map{|p| project_list[p['id']] = p['name']}
+    (project_map['owner'] + project_map['collaborator']).map{|p| project_list[p['id']] = p }
     while options.project_id.nil? or !project_list.has_key?(options.project_id.to_i)
       puts
       puts "Enter the ID of the project to add your samples/datasets to:"
       puts
-      project_list.keys.sort.map{|id| puts "%4s : #{project_list[id]}" % id}
+      project_list.keys.sort.map{|id| puts "%5s : #{project_list[id]['name']}" % id}
       options.project_id = prompt_for('Project ID')
+    end
+
+    project = project_list[options.project_id.to_i]
+    if !project['experiments'].empty?
+      valid = false
+      begin
+        puts
+        puts "Enter the ID of the experiment to add your samples/datasets to:"
+        puts
+        project['experiments'].map{|e|
+          puts "%5s : #{e['name']}" % e['id']
+        }
+        options.experiment_id = prompt_for('Experiment ID [Enter to skip]')
+        options.experiment_id = nil if options.experiment_id == ""
+        valid = options.experiment_id.nil? ||
+                has_experiment?(project, options.experiment_id.to_i)
+      end until valid
+      
     end
 
     options
@@ -177,5 +204,9 @@ class NMRUploader
     ask("#{key}: ") {|q| q.echo = opts[:hidden] != true}
   end
 
+  private
+  def self.has_experiment?(project, experiment_id)
+    !project['experiments'].select{|e| e['id'] == experiment_id}.empty?
+  end
 end
 
