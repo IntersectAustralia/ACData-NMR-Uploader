@@ -4,14 +4,16 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "nmr_uploader"
-  s.version = "0.1.0"
+  s.name = %q{nmr_uploader}
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sean McCarthy"]
-  s.date = "2012-03-29"
-  s.description = "Upload NMR datasets to ACData"
-  s.email = "enquiries@intersect.org.au"
+  s.date = %q{2012-05-01}
+  s.default_executable = %q{nmr_uploader}
+  s.description = %q{Upload NMR datasets to ACData}
+  s.email = %q{enquiries@intersect.org.au}
+  s.executables = ["nmr_uploader"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -19,40 +21,46 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "lib/nmr_uploader.rb"
+    "bin/nmr_uploader",
+    "lib/nmr_uploader.rb",
+    "nmr_uploader.gemspec"
   ]
-  s.homepage = "http://github.com/IntersectAustralia/nmr_uploader"
-  s.licenses = ["MIT"]
+  s.homepage = %q{http://github.com/IntersectAustralia/nmr_uploader}
+  s.licenses = ["GPL-3"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
-  s.summary = "Upload NMR datasets to ACData"
+  s.rubygems_version = %q{1.6.2}
+  s.summary = %q{Upload NMR datasets to ACData}
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<acdata-dataset-api>, [">= 0"])
+      s.add_runtime_dependency(%q<highline>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_runtime_dependency(%q<highline>, [">= 0"])
     else
+      s.add_dependency(%q<acdata-dataset-api>, [">= 0"])
+      s.add_dependency(%q<highline>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_dependency(%q<highline>, [">= 0"])
     end
   else
+    s.add_dependency(%q<acdata-dataset-api>, [">= 0"])
+    s.add_dependency(%q<highline>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<bundler>, ["~> 1.1.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-    s.add_dependency(%q<highline>, [">= 0"])
   end
 end
 
