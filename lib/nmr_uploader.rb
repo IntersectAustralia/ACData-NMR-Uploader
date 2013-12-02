@@ -45,8 +45,6 @@ class NMRUploader
     
   end
   
-
-
   def self.extract_title(nmr_dir)
     title_file_path = File.join(nmr_dir, 'pdata', '1', 'title')
     title = "Untitled"
@@ -61,7 +59,6 @@ class NMRUploader
     title += " - #{nmr_dir[/\w+$/]}"
     title
     
- #   puts "TEST: #{title}"
   end
 
   def self.get_sample_directories(base_dir)
@@ -136,7 +133,6 @@ class NMRUploader
 
     while options.src_dir.nil? or !File.directory?(options.src_dir)
       puts
-      puts "Shane's Version NMR Uploader"
       puts "Enter the directory containing the NMR data directories."
       puts "E.g. Gyro/data/abc/nmr/YYMMDD-aaa"
       puts
