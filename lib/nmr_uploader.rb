@@ -3,10 +3,11 @@ require 'optparse'
 require 'ostruct'
 require 'highline/import'
 require 'json'
+require 'find'
 
 class NMRUploader
 
-  DEFAULT_URL = 'http://localhost:3000'
+  DEFAULT_URL = 'https://researchdata.unsw.edu.au'
 
   def self.create_datasets(opts)
     api = ACDataDatasetAPI.new(opts.url)
@@ -24,8 +25,10 @@ class NMRUploader
 
         opts.sample_directories[sample_dir].each do |dataset_dir|
           title = self.extract_title(dataset_dir)
+          jcamp_file = self.jcamp_exists(dataset_dir)
+          upload_files = (jcamp_file << dataset_dir).flatten
           puts "Creating dataset name: #{title} (under sample: #{sample_name})"
-          api.create_dataset(opts.session_id, title, opts.instrument_id, sample['id'], [dataset_dir])
+          api.create_dataset(opts.session_id, title, opts.instrument_id, sample['id'], upload_files)
         end
         puts
       rescue Exception => e
@@ -35,6 +38,14 @@ class NMRUploader
     end
 
   end
+
+  def self.jcamp_exists(nmr_dir)
+    file_path = File.join(nmr_dir, 'pdata','1','**/*.dx')
+    Dir.glob(file_path)
+    
+  end
+  
+
 
   def self.extract_title(nmr_dir)
     title_file_path = File.join(nmr_dir, 'pdata', '1', 'title')
@@ -49,6 +60,8 @@ class NMRUploader
 
     title += " - #{nmr_dir[/\w+$/]}"
     title
+    
+ #   puts "TEST: #{title}"
   end
 
   def self.get_sample_directories(base_dir)
@@ -123,6 +136,7 @@ class NMRUploader
 
     while options.src_dir.nil? or !File.directory?(options.src_dir)
       puts
+      puts "Shane's Version NMR Uploader"
       puts "Enter the directory containing the NMR data directories."
       puts "E.g. Gyro/data/abc/nmr/YYMMDD-aaa"
       puts
